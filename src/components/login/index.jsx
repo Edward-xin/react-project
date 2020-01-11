@@ -37,7 +37,7 @@ class Login extends Component {
       callback(`${name}只能包含英文、数字、下划线`);
     }
 
-    // 必须要调用
+    // 必须要调用haiyou
     callback();
   };
 
@@ -105,7 +105,6 @@ class Login extends Component {
                   placeholder="密码"
                 />
               )}
-              
             </Form.Item>
             <Form.Item>
               <Button className="login-form-btn" type="primary">

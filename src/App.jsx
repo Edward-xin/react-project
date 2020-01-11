@@ -8,6 +8,7 @@ export default class App extends Component {
   render() {
     return (
       <Router>
+        {/* exact 全匹配 否则会命中两个地址 */}
         <Route path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />
       </Router>

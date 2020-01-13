@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import axios from "axios";
 // 引入antd的表单组件
 import { Button, Form, Input, Icon } from "antd";
 
@@ -7,6 +7,8 @@ import { Button, Form, Input, Icon } from "antd";
 import logo from "./logo.png";
 // 引入样式文件
 import "./index.less";
+
+const { Item } = Form;
 
 // 高阶组件 给Login组件传递form属性
 @Form.create()
@@ -41,6 +43,36 @@ class Login extends Component {
     callback();
   };
 
+  login = e => {
+    e.preventDefault();
+
+    // 传进来的form属性上有个方法 用来表单校验并收集数据
+    this.props.form.validateFields((err, values) => {
+      /**
+       * err 表示错误对象 即表单校验失败
+       * values 表单数据
+       */
+      // 表单校验成功
+      if (!err) {
+        // 收集表单数据
+        const { username, password } = values;
+        // 发送请求，请求登录 这里要解决跨域问题
+        axios.post('/api/login',{username,password})
+          .then((response)=>{
+            // 请求成功 
+            console.log(response);
+            
+            // 判断是否登录成功
+          })
+          .catch((err)=>{
+            console.log(err);
+            
+          })
+
+      }
+    });
+  };
+
   render() {
     // 传进来的form属性 有getFieldDecorator方法 这个方法是用来做表单校验的 它也是高阶组件
     const { getFieldDecorator } = this.props.form;
@@ -53,8 +85,8 @@ class Login extends Component {
         </header>
         <section className="login-section">
           <h3>用户登录</h3>
-          <Form className="login-form">
-            <Form.Item>
+          <Form className="login-form" onSubmit={this.login}>
+            <Item>
               {/* 第一个括号里的第一个参数 username作为将来收集表单数据的key */}
               {getFieldDecorator("username", {
                 rules: [
@@ -89,8 +121,8 @@ class Login extends Component {
                   placeholder="用户名"
                 />
               )}
-            </Form.Item>
-            <Form.Item>
+            </Item>
+            <Item>
               {getFieldDecorator("password", {
                 rules: [
                   {
@@ -105,12 +137,17 @@ class Login extends Component {
                   placeholder="密码"
                 />
               )}
-            </Form.Item>
-            <Form.Item>
-              <Button className="login-form-btn" type="primary">
+            </Item>
+            <Item>
+              <Button
+                className="login-form-btn"
+                type="primary"
+                // button上的原生type值
+                htmlType="submit"
+              >
                 登录
               </Button>
-            </Form.Item>
+            </Item>
           </Form>
         </section>
       </div>

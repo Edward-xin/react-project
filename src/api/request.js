@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
     if (err.response) {
       // 接收到响应  但响应是失败的
       // 根据响应状态码判断错误
-      errMessage = errCode[response.data.status];
+      errMessage = errCode[err.response.status];
     } else {
       // 没有接收到响应
       // 根据err的message（错误信息）来判断错误

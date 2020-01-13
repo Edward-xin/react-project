@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import axios from "axios";
 // 引入antd的表单组件
 import { Button, Form, Input, Icon, message } from "antd";
+import { connect } from "react-redux";
+
+import { savaUserAsync } from "../../redux/actions";
 
 // 图片必须引入，才会被webpack打包
 import logo from "./logo.png";
@@ -10,8 +12,8 @@ import "./index.less";
 
 const { Item } = Form;
 
-// 高阶组件 给Login组件传递form属性
-@Form.create()
+@connect(null, { savaUserAsync })
+@Form.create() // 高阶组件 给Login组件传递form属性
 class Login extends Component {
   // 自定义校验 传入三个参数 callback必须被调用
   validator = (rule, value, callback) => {
@@ -57,7 +59,8 @@ class Login extends Component {
         // 收集表单数据
         const { username, password } = values;
         // 发送请求，请求登录 这里要解决跨域问题
-        axios
+        //#region
+        /* axios
           .post("/api/login", { username, password })
           .then(response => {
             // 请求成功
@@ -81,6 +84,21 @@ class Login extends Component {
             message.error("网络异常");
             // 清空密码
             this.props.form.resetFields(["password"]);
+          }); */
+        //#endregion
+
+        // 得到登录成功/失败
+        this.props
+          .savaUserAsync(username, password)
+          .then(() => {
+            // 编程式导航用于(非render方法中) 路由组件的history属性 replace方法 取代当前的历史记录 不能回退
+            // this.props.history.replace("/");
+          })
+          .catch(err => {
+            // 登录失败
+            message.error(err);
+            //清空密码
+            this.props.form.resetFields(["password"]);
           });
       }
     });
@@ -103,6 +121,7 @@ class Login extends Component {
               {/* 第一个括号里的第一个参数 username作为将来收集表单数据的key */}
               {getFieldDecorator("username", {
                 rules: [
+                  //#region
                   /* // 这种方法不好 因为他不满足多个条件会同时报多个错误
                   {
                     required: true,
@@ -120,6 +139,7 @@ class Login extends Component {
                     pattern: /^\w+$/,
                     message: "用户名只能包含英文、数字、下划线"
                   } */
+                  //#endregion
                   // 使用自定义校验 callback必须被调用 这种方法不会同时报多个错误并且可以复用代码
                   {
                     validator: this.validator

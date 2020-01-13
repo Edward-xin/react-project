@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 // 引入antd的表单组件
-import { Button, Form, Input, Icon } from "antd";
+import { Button, Form, Input, Icon, message } from "antd";
 
 // 图片必须引入，才会被webpack打包
 import logo from "./logo.png";
@@ -57,18 +57,31 @@ class Login extends Component {
         // 收集表单数据
         const { username, password } = values;
         // 发送请求，请求登录 这里要解决跨域问题
-        axios.post('/api/login',{username,password})
-          .then((response)=>{
-            // 请求成功 
-            console.log(response);
-            
+        axios
+          .post("/api/login", { username, password })
+          .then(response => {
+            // 请求成功
+            // console.log(response);
             // 判断是否登录成功
+            if (response.data.status === 0) {
+              // 登录成功就跳转到home页面
+              // 这里不能用<Redirect />这个组件(只能用于render方法中)
+              // 编程式导航用于(非render方法中) 路由组件的history属性 replace方法 取代当前的历史记录 不能回退
+              this.props.history.replace("/");
+            } else {
+              // 登录失败 提示错误 antd的对象message
+              message.error(response.data.msg);
+              // 清空密码 form属性上的重置表单项的方法(不写会重置所有组件)
+              this.props.form.resetFields(["password"]);
+            }
           })
-          .catch((err)=>{
-            console.log(err);
-            
-          })
-
+          .catch(err => {
+            // 请求失败 提示错误
+            // console.log(err);
+            message.error("网络异常");
+            // 清空密码
+            this.props.form.resetFields(["password"]);
+          });
       }
     });
   };

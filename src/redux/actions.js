@@ -5,7 +5,10 @@
  */
 import { requLogin } from "../api";
 import { setItem } from "../utils/storage";
-import {SAVA_USER} from './action-types'
+import {SAVA_USER,REMOVE_USER} from './action-types'
+
+// 这个同步action 不需要数据 用来退出时清空redux的数据
+export const removeUser = ()=>({type:REMOVE_USER})
 
 // 定义的这个同步action是给下面异步操作中出触发更新时用
 const savaUser =(user)=>({type:SAVA_USER,data:user})

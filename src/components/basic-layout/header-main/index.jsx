@@ -1,10 +1,24 @@
 import React, { Component } from "react";
-import { Button, Icon } from "antd";
+import { Button, Icon, Modal } from "antd";
 import screenfull from "screenfull";
+import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
+
+import {removeItem} from '$utils/storage';
+import {removeUser} from '$redux/actions'
 
 import "./index.less";
 
-export default class HeaderMain extends Component {
+@connect(
+  state=>({
+    username:state.user.user && state.user.user.username
+  }),
+  {
+    removeUser
+  }
+)
+@withRouter
+class HeaderMain extends Component {
   state = {
     isScreenfull: false // 全屏标记 一开始不是全屏
   };
@@ -29,18 +43,37 @@ export default class HeaderMain extends Component {
   screenFull = () => {
     screenfull.toggle();
   };
-
+  // 退出功能
+  logout = () => {
+    Modal.confirm({
+      title: "您确认要退出登录吗?",
+      // content: "",
+      onOk:()=>{
+        // 清空数据 localStorage 和redux都要清
+        removeItem('user')
+        this.props.removeUser()
+        // 跳转到login页面
+        this.props.history.replace('/login');
+      },
+      /* onCancel:()=>{
+        console.log("Cancel");
+      } */
+    });
+  };
   render() {
     const { isScreenfull } = this.state;
+    const {username} = this.props;
     return (
       <div className="header-main">
         <div className="header-main-top">
           <Button size="small" onClick={this.screenFull}>
             <Icon type={isScreenfull ? "fullscreen-exit" : "fullscreen"} />
           </Button>
-          <Button size="small">English</Button>
-          <span className="header-main-lang">hello,admin</span>
-          <Button size="small">退出</Button>
+          <Button className="header-main-lang" size="small">English</Button>
+          <span >hello,{username}~~ </span>
+          <Button size="small" onClick={this.logout}>
+            退出
+          </Button>
         </div>
         <div className="header-main-bottom">
           <span className="header-main-left">商品管理</span>
@@ -50,3 +83,5 @@ export default class HeaderMain extends Component {
     );
   }
 }
+
+export default HeaderMain;

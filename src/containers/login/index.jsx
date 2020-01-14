@@ -7,7 +7,7 @@ import { savaUserAsync } from "../../redux/actions";
 import withCheckLogin from '../with-check-login'
 
 // 图片必须引入，才会被webpack打包
-import logo from "./logo.png";
+import logo from '../../assets/imgs/logo.png';
 // 引入样式文件
 import "./index.less";
 

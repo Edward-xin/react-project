@@ -10,7 +10,7 @@ export default function Test() {
       是一个拦截请求/响应的函数
       作用：
         作为请求拦截器：设置公共的请求头 / 参数...
-        作为响应拦截器：
+        作为响应拦截器：用来统一处理错误
       执行流程；
         1. 执行请求拦截器函数
         2. 发送请求
@@ -72,6 +72,7 @@ export default function Test() {
         // 设置编码格式
         config.headers["content-type"] = "application/x-www-form-urlencoded";
       }
+      // 返回用户数据和token
       return config;
     }
     // 设置发送请求，代码失败 （一般不需要用到 可以不写）
@@ -89,7 +90,7 @@ export default function Test() {
     // 响应成功 就返回数据  下面axiosInstance().then()接收的是这里的响应成功的数据
     response => {
       if (response.data.status === 0) {
-        // 登录功能成功 
+        // 登录功能成功
         return response.data.data;
       } else {
         // 登录功能失败
@@ -117,16 +118,16 @@ export default function Test() {
       if (err.response) {
         // err.response有值 说明接受到了响应，响应是失败的响应
         // 根据响应状态码判断错误 401 403 404 500
-        errMessage=errCode[err.response.status];
-      }else{
+        errMessage = errCode[err.response.status];
+      } else {
         // 说明没有接受到响应，请求就失败了
-        if (err.message.indexOf('Network Error') !== -1) {
-          errMessage = '网络连接失败，请重连网络试试~';
-        } else if (err.message.indexOf('timeout') !== -1) {
-          errMessage = '网络超时，请连上wifi重试~';
+        if (err.message.indexOf("Network Error") !== -1) {
+          errMessage = "网络连接失败，请重连网络试试~";
+        } else if (err.message.indexOf("timeout") !== -1) {
+          errMessage = "网络超时，请连上wifi重试~";
         }
       }
-      return Promise.reject(errMessage || '发生未知错误，请联系管理员');
+      return Promise.reject(errMessage || "发生未知错误，请联系管理员");
     }
   );
 
@@ -155,7 +156,7 @@ export default function Test() {
       })
       .catch(err => {
         console.log(err);
-        
+
         message.error("网络错误");
       });
   };

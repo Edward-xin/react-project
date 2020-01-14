@@ -4,6 +4,7 @@ import { Button, Form, Input, Icon, message } from "antd";
 import { connect } from "react-redux";
 
 import { savaUserAsync } from "../../redux/actions";
+import withCheckLogin from '../with-check-login'
 
 // 图片必须引入，才会被webpack打包
 import logo from "./logo.png";
@@ -12,6 +13,7 @@ import "./index.less";
 
 const { Item } = Form;
 
+@withCheckLogin
 @connect(null, { savaUserAsync })
 @Form.create() // 高阶组件 给Login组件传递form属性
 class Login extends Component {
@@ -91,13 +93,14 @@ class Login extends Component {
         this.props
           .savaUserAsync(username, password)
           .then(() => {
+            // 登录成功 跳转到home页面
             // 编程式导航用于(非render方法中) 路由组件的history属性 replace方法 取代当前的历史记录 不能回退
-            // this.props.history.replace("/");
+            this.props.history.replace("/");
           })
           .catch(err => {
             // 登录失败
             message.error(err);
-            //清空密码
+            // 清空密码
             this.props.form.resetFields(["password"]);
           });
       }
@@ -168,18 +171,19 @@ class Login extends Component {
                     <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="密码"
+                  type="password"
                 />
               )}
             </Item>
             <Item>
-              <Button
-                className="login-form-btn"
-                type="primary"
-                // button上的原生type值
-                htmlType="submit"
-              >
-                登录
-              </Button>
+            <Button
+              className="login-form-btn"
+              type="primary"
+              // button上的原生type值
+              htmlType="submit"
+            >
+              登录
+            </Button>
             </Item>
           </Form>
         </section>

@@ -5,6 +5,7 @@
 import axios from "axios";
 
 import errCode from "../config/error-code";
+import store from "$redux/store";
 
 // 创建axios实例 配置axios拦截器
 const axiosInstance = axios.create({
@@ -25,8 +26,9 @@ axiosInstance.interceptors.request.use(config => {
    * 设置公共的参数
    */
 
+  // 获取redux里的token
+  const token = store.getState().user.token;
   // 设置令牌 需要令牌登录后才能访问其他页面
-  let token = "";
   if (token) {
     config.headers.authorization = `Bearer ${token}`;
   }
@@ -44,7 +46,7 @@ axiosInstance.interceptors.request.use(config => {
       .slice(1);
     config.headers["content-type"] = "application/x-www-form-urlencoded";
   }
-
+  // 返回用户数据和token
   return config;
 });
 
@@ -52,14 +54,18 @@ axiosInstance.interceptors.request.use(config => {
 axiosInstance.interceptors.response.use(
   // 响应成功 就返回数据  下面axiosInstance().then()接收的是这里的响应成功的数据
   response => {
-    // 登录成功
+    // 响应成功不代表功能成功 还要进行判断
     if (response.data.status === 0) {
+      // 登录成功
       // 直接返回数据 就是一个成功的promise
       return response.data.data;
     } else {
+      // 登录失败
+      // 返回一个失败状态的promise 失败的原因输出
       return Promise.reject(response.data.msg);
     }
   },
+
   // 响应失败 根据不同的错误原因 提示不同的错误
   err => {
     let errMessage = "";
@@ -70,7 +76,7 @@ axiosInstance.interceptors.response.use(
       errMessage = errCode[err.response.status];
     } else {
       // 没有接收到响应
-      // 根据err的message（错误信息）来判断错误
+      // 根据err的message属性（错误信息）来判断错误
       if (err.message.indexOf("Network Error") !== -1) {
         errMessage = "网络连接失败，请重连网络试试~";
       } else if (err.message.indexOf("timeout") !== -1) {

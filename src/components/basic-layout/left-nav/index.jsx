@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Menu, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
+import {FormattedMessage} from 'react-intl'
 
 import menus from "$conf/menus";
 
@@ -20,7 +21,7 @@ class LeftNav extends Component {
             title={
               <span>
                 <Icon type={menu.icon} />
-                <span>{menu.title} </span>
+                <FormattedMessage id={menu.title} />
               </span>
             }
           >
@@ -39,7 +40,7 @@ class LeftNav extends Component {
       <Item key={menu.path}>
         <Link to={menu.path}>
           <Icon type={menu.icon} />
-          <span>{menu.title}</span>
+          <FormattedMessage id={menu.title} />
         </Link>
       </Item>
     );
@@ -48,13 +49,17 @@ class LeftNav extends Component {
   // 找到需要展开的二级以上的菜单
   findOpenKey = (pathname, menus) => {
     const menu = menus.find(menu => {
-      if (menu.children) {
+      /* if (menu.children) {
         // 二级菜单 返回找到相同地址的菜单项
         return menu.children.find(cMenu => cMenu.path === pathname);
-      }
+      } */
+      return (
+        menu.children && menu.children.find(cMenu => cMenu.path === pathname)
+      );
+      
     });
     if (menu) {
-      // 如果找得到 就返回这个菜单项的地址
+      // 如果找得到 就返回这个菜单项的父级菜单的地址
       return menu.path;
     }
   };

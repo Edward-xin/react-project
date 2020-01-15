@@ -5,7 +5,10 @@
  */
 import { requLogin } from "../api";
 import { setItem } from "../utils/storage";
-import {SAVA_USER,REMOVE_USER} from './action-types'
+import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE} from './action-types'
+
+
+export const changeLanguage = (lang) =>({type:CHANGE_LANGUAGE,data:lang})
 
 // 这个同步action 不需要数据 用来退出时清空redux的数据
 export const removeUser = ()=>({type:REMOVE_USER})

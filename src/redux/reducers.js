@@ -2,7 +2,12 @@
  * 用来根据prevState和action生成newState函数模块
  */
 import { combineReducers } from "redux";
-import { SAVA_USER, REMOVE_USER, CHANGE_LANGUAGE } from "./action-types";
+import {
+  SAVA_USER,
+  REMOVE_USER,
+  CHANGE_LANGUAGE,
+  GET_CATEGORY
+} from "./action-types";
 import { getItem } from "../utils/storage";
 
 // 读取用户数据和token：先从 localStorage 中读取，存在 redux 中，后面通过 redux 读取使用
@@ -31,7 +36,19 @@ function language(prevState = initLanguage, action) {
   }
 }
 
+// 存储分类列表数据
+const initCategories = [];
+function categories(prevState = initCategories, action) {
+  switch (action.type) {
+    case GET_CATEGORY:
+      return action.data;
+    default:
+      return prevState;
+  }
+}
+
 export default combineReducers({
   user,
-  language
+  language,
+  categories
 });

@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Layout, Menu, Breadcrumb, Icon } from "antd";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl";
 import withCheckLogin from "../../containers/with-check-login";
 
-
-import LeftNav from './left-nav';
-import HeaderMain from './header-main'
+import LeftNav from "./left-nav";
+import HeaderMain from "./header-main";
 
 import logo from "../../assets/imgs/logo.png";
 import "./index.less";
@@ -36,20 +35,16 @@ class BasicLyout extends Component {
           <div className="layout-logo">
             <img src={logo} alt="logo" />
             <h1 style={{ display: isDisplay ? "block" : "none" }}>
-              <FormattedMessage id="title" />  
+              <FormattedMessage id="title" />
             </h1>
           </div>
           <LeftNav />
         </Sider>
         <Layout>
-          <Header style={{ background: "#fff", padding: 0 ,height:80}}>
+          <Header style={{ background: "#fff", padding: 0, height: 80 }}>
             <HeaderMain />
           </Header>
-          <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
+          <Content style={{ margin: "40px 16px 0 16px" }}>
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
               {children}
             </div>

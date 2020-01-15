@@ -3,9 +3,9 @@
  * 同步action
  * 异步action
  */
-import { requLogin } from "../api";
+import { requLogin,reGetCategoryList} from "../api";
 import { setItem } from "../utils/storage";
-import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE} from './action-types'
+import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY} from './action-types'
 
 
 export const changeLanguage = (lang) =>({type:CHANGE_LANGUAGE,data:lang})
@@ -13,9 +13,10 @@ export const changeLanguage = (lang) =>({type:CHANGE_LANGUAGE,data:lang})
 // 这个同步action 不需要数据 用来退出时清空redux的数据
 export const removeUser = ()=>({type:REMOVE_USER})
 
+
+
 // 定义的这个同步action是给下面异步操作中出触发更新时用
 const savaUser =(user)=>({type:SAVA_USER,data:user})
-
 // 发送请求相关的数据就是异步action
 export const savaUserAsync = (username, password) => {
   return dispatch => {
@@ -48,3 +49,19 @@ export const savaUserAsync = (username, password) => {
     
   };
 };
+
+const getCategory=(categories)=>({
+  type:GET_CATEGORY,
+  data:categories
+})
+
+// 异步action 发送请求获取分类列表数据
+export const getCategoryAsync= ()=>{
+  return dispatch=>{
+     // 发送请求
+     reGetCategoryList()
+      .then(response=>{
+        dispatch(getCategory(response))
+      })
+  }
+}

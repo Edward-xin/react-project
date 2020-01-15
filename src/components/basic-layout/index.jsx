@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Layout, Menu, Breadcrumb, Icon } from "antd";
 import { FormattedMessage } from 'react-intl';
+import withCheckLogin from "../../containers/with-check-login";
+
 
 import LeftNav from './left-nav';
 import HeaderMain from './header-main'
@@ -10,7 +12,8 @@ import "./index.less";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-export default class BasicLyout extends Component {
+@withCheckLogin
+class BasicLyout extends Component {
   state = {
     collapsed: false,
     isDisplay: true
@@ -59,3 +62,5 @@ export default class BasicLyout extends Component {
     );
   }
 }
+
+export default BasicLyout;

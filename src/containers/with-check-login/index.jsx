@@ -28,10 +28,10 @@ export default function withCheckLogin(WrappedComponent) {
           this.props.history.push/replace 用于非render方式中
 
         如果登录过，
-          访问 / ，可以访问
+          访问 / /category，(访问不是 /login )可以访问
           访问 /login, 跳转到 /
         如果没有登录过
-          访问 / ，跳转到 /login
+          访问 / /category，(访问不是 /login )跳转到 /login
           访问 /login, 可以访问
       */
       const {
@@ -47,7 +47,7 @@ export default function withCheckLogin(WrappedComponent) {
         }
       } else {
         // 没登录过
-        if (pathname === "/") {
+        if (pathname !== "/login") {
           return <Redirect to="/login" />;
         }
       }

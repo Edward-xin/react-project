@@ -4,9 +4,9 @@ import { IntlProvider } from "react-intl";
 import { connect } from "react-redux";
 import { ConfigProvider } from "antd";
 
-import Home from "./components/home";
 import Login from "./containers/login";
 import BasicLyout from "./components/basic-layout";
+import routes from './config/routes'
 import { en, zhCN } from "./locales";
 
 import zh_CN from "antd/es/locale/zh_CN";
@@ -32,7 +32,12 @@ class App extends Component {
               <Route path="/login" exact component={Login} />
               {/* exact 全匹配 否则会命中两个地址 */}
               <BasicLyout>
-                <Route path="/" exact component={Home} />
+                {
+                  routes.map(route=>{
+                    // return <Route path={route.path} exact={route.exact} component={route.component} />
+                    return <Route {...route} key={route.path} />
+                  })
+                }
               </BasicLyout>
             </Switch>
           </Router>

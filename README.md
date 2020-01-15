@@ -71,3 +71,13 @@
 ### 退出功能
 * 清空数据(redux和localStorage 都要清空)
 * 跳转到login页面(connect高级组件获得history)
+
+### 国际化功能
+* yarn add react-intl 
+* IntlProvider、FormattedMessage 设置自己文字的国际化
+* ConfigProvider设置antd组件的国际化
+* 对话框国际化处理(对话框不在root,没有被渲染到)
+
+### HeaderMain头部标题的国际化和切换
+
+### HeaderMain头部日期功能

@@ -1,12 +1,13 @@
 /**
- * 用来根据prevState和action生成newState函数模块
+ * 用来根据prevState和action生成newState函数模块（存储的数据）
  */
 import { combineReducers } from "redux";
 import {
   SAVA_USER,
   REMOVE_USER,
   CHANGE_LANGUAGE,
-  GET_CATEGORY
+  GET_CATEGORY_LIST,
+  ADD_CATEGORY
 } from "./action-types";
 import { getItem } from "../utils/storage";
 
@@ -36,12 +37,14 @@ function language(prevState = initLanguage, action) {
   }
 }
 
-// 存储分类列表数据
+// 存储分类列表数据 添加分类
 const initCategories = [];
 function categories(prevState = initCategories, action) {
   switch (action.type) {
-    case GET_CATEGORY:
+    case GET_CATEGORY_LIST:
       return action.data;
+    case ADD_CATEGORY:
+      return [...prevState,action.data]
     default:
       return prevState;
   }

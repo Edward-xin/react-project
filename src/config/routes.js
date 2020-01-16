@@ -3,7 +3,7 @@
  */
 
 import Home from "../components/home";
-import Category from "../components/category";
+import Category from '../containers/category';
 
 const routes = [
   {

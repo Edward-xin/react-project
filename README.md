@@ -34,13 +34,22 @@
 				* 本地没有进行版本控制 
 				* 远程仓库有更新 git pull origin xxx 
 
-### react基本配置
+### antd基本配置
 * https://ant.design/docs/react/use-with-create-react-app-cn
 * create-react-app xxx文件   初始化脚手架
+* yarn add antd
 * yarn add react-app-rewired customize-cra babel-plugin-import less less-loader @babel/plugin-proposal-decorators --dev
 * 修改package.json 命令配置 (start、build、test 配置为react-app-rewired xxx)
 * 创建并修改config-overrides.js的配置
-* 下载包 yarn add react-redux
+
+### react-router基本配置
+* yarn add react-router-dom
+* 应用BrowserRouter as Router, Route, Switch,Redirect
+
+### redux基本配置
+* yarn add redux react-redux redux-thunk
+* yarn add redux-devtools-extension --dev
+* redux文件的基本配置(actions、action-types、reducers、store)
 
 ### login页面
 
@@ -73,10 +82,16 @@
 * 跳转到login页面(connect高级组件获得history)
 
 ### 国际化功能
-* yarn add react-intl 
-* IntlProvider、FormattedMessage 设置自己文字的国际化
-* ConfigProvider设置antd组件的国际化
+* 设置自己文字的国际化
+	* yarn add react-intl 
+	* IntlProvider组件要包裹App组件 提供语言包
+	* 定义语言包文件locals
+	* FormattedMessage 接收语言包 
+* 设置antd组件的国际化
+	* ConfigProvider （需引入antd的语言包）
 * 对话框国际化处理(对话框不在root,没有被渲染到)
+	* 通过高阶组件 injectIntl 获得intl属性
+	* intl.formatMessage({id:'xxx'})
 
 ### HeaderMain头部标题的国际化和切换
 
@@ -85,5 +100,27 @@
 
 ### 路由处理
 * 在config文件中定义页路由文件，方便管理多个路由
+* 切换语言这个状态要存在redux里 
+* 点击事件 点击按钮切换语言
 * 因为多个路由需要检测登录 所以在只要在basic-layout组件使用高阶组件即可
 * 同时修改检测登录的高阶组件(防止没登录过的也可以直接访问路由)
+
+### Category静态组件
+* Card组件
+* Table组件
+
+### Category组件数据动态展示
+* 根据api文档 请求获取分类列表数据
+* 要将分类列表数据存在redux里 方便将来其他组件使用
+* 获取redux里的数据应用在Table组件里
+
+### Category组件添加分类功能
+* 引入Modal对话框组件 实现基本功能
+* Modal组件中引入form表单组件
+	* 每个组件的form属性只能收集到自己的数据 要用子组件收集的数据就用官方提供的方法wrappedComponentRef获取子组件的form实例
+	* https://ant.design/components/form-cn/#components-form-demo-validate-other
+	* 通过子组件收集的form实例获取validateFields方法 校验表单并收集表单数据
+* 发送请求  在api定义（根据api文档）
+* 在redux中存储分类数据 (更新后端数据)
+* 请求成功，就会更新前端数据（成功后清空表单数据和隐藏对话框）
+

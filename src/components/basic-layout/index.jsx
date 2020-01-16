@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Layout} from "antd";
 import { FormattedMessage } from "react-intl";
 import withCheckLogin from "../../containers/with-check-login";
 

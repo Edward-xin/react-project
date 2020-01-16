@@ -3,9 +3,9 @@
  * 同步action
  * 异步action
  */
-import { requLogin,reGetCategoryList} from "../api";
+import { requLogin,reqGetCategoryList,reqAddCategory} from "../api";
 import { setItem } from "../utils/storage";
-import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY} from './action-types'
+import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY_LIST,ADD_CATEGORY} from './action-types'
 
 
 export const changeLanguage = (lang) =>({type:CHANGE_LANGUAGE,data:lang})
@@ -50,18 +50,31 @@ export const savaUserAsync = (username, password) => {
   };
 };
 
-const getCategory=(categories)=>({
-  type:GET_CATEGORY,
+const getCategoryList=(categories)=>({
+  type:GET_CATEGORY_LIST,
   data:categories
 })
 
 // 异步action 发送请求获取分类列表数据
-export const getCategoryAsync= ()=>{
+export const getCategoryListAsync= ()=>{
   return dispatch=>{
      // 发送请求
-     reGetCategoryList()
+     return reqGetCategoryList()
       .then(response=>{
-        dispatch(getCategory(response))
+        dispatch(getCategoryList(response))
       })
   }
 }
+
+const addCategory=category=>({type:ADD_CATEGORY,data:category})
+// 异步action 发送请求获取分类数据
+export const addCategoryAsync= (categoryName)=>{
+  return dispatch=>{
+     // 发送请求
+     return reqAddCategory(categoryName)
+      .then(response=>{
+        dispatch(addCategory(response))
+      })
+  }
+}
+

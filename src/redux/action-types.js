@@ -4,4 +4,5 @@
 export const SAVA_USER = "SAVA_USER";
 export const REMOVE_USER = "REMOVE_USER";
 export const CHANGE_LANGUAGE = "CHANGE_LANGUAGE";
-export const GET_CATEGORY = "GET_CATEGORY";
+export const GET_CATEGORY_LIST = "GET_CATEGORY_LIST";
+export const ADD_CATEGORY='ADD_CATEGORY'

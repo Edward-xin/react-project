@@ -16,9 +16,20 @@ export const requLogin=(username,password)=>{
 }
 
 // 请求获取分类列表数据
-export const reGetCategoryList=()=>{
+export const reqGetCategoryList=()=>{
   return axiosInstance({
     url:'category/get',
     method:'GET'
+  })
+}
+
+// 请求添加分类数据
+export const reqAddCategory=(categoryName)=>{
+  return axiosInstance({
+    url:'/category/add',
+    method:'POST',
+    data:{
+      categoryName
+    }
   })
 }

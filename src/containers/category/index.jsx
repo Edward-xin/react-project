@@ -5,14 +5,16 @@ import { connect } from "react-redux";
 import {
   getCategoryListAsync,
   addCategoryAsync,
-  updateCategoryAsync
+  updateCategoryAsync,
+  deleteCategoryAsync
 } from "$redux/actions";
 import AddCategoryForm from "./add-category-form";
 
 @connect(state => ({ categories: state.categories }), {
   getCategoryListAsync,
   addCategoryAsync,
-  updateCategoryAsync
+  updateCategoryAsync,
+  deleteCategoryAsync
 })
 class Category extends Component {
   state = {
@@ -43,12 +45,34 @@ class Category extends Component {
             <Button type="link" onClick={this.showCategoryModal(category)}>
               修改分类
             </Button>
-            <Button type="link">删除分类</Button>
+            <Button type="link" onClick={this.delCategory(category)}>
+              删除分类
+            </Button>
           </div>
         );
       }
     }
   ];
+  /**
+   * 删除分类
+   */
+  delCategory = category => {
+    return () => {
+      Modal.confirm({
+        title: `您确认要删除${category.name}分类吗?`,
+        onOk: () => {
+          this.props
+            .deleteCategoryAsync(category._id)
+            .then(() => {
+              message.success("删除分类成功~");
+            })
+            .catch(err => {
+              message.error(err);
+            });
+        }
+      });
+    };
+  };
 
   /**
    * 添加/修改分类
@@ -83,7 +107,7 @@ class Category extends Component {
         promise
           .then(() => {
             // 提示
-            message.success(`${name?'修改':'添加'}分类成功`);
+            message.success(`${name ? "修改" : "添加"}分类成功`);
             // 清空表单数据 不写代表所有表单组件清空
             resetFields();
             // 隐藏对话框

@@ -18,7 +18,7 @@ export const requLogin=(username,password)=>{
 // 请求获取分类列表数据
 export const reqGetCategoryList=()=>{
   return axiosInstance({
-    url:'category/get',
+    url:'/category/get',
     method:'GET'
   })
 }
@@ -30,6 +30,41 @@ export const reqAddCategory=(categoryName)=>{
     method:'POST',
     data:{
       categoryName
+    }
+  })
+}
+
+// 请求修改分类数据
+export const reqUpdateCategory=(categoryId,categoryName)=>{
+  return axiosInstance({
+    url:'/category/update',
+    method:'POST',
+    data:{
+      categoryName,
+      categoryId
+    }
+  })
+}
+
+// 请求删除分类数据
+export const reqDeleteCategory=(categoryId)=>{
+  return axiosInstance({
+    url:'/category/delete',
+    method:'POST',
+    data:{
+      categoryId
+    }
+  })
+}
+
+// 请求获取商品列表数据
+export const reqGetProductList=(pageNum,pageSize)=>{
+  return axiosInstance({
+    url:'/product/list',
+    method:'GET',
+    params:{
+      pageNum,
+      pageSize
     }
   })
 }

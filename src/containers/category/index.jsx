@@ -2,16 +2,23 @@ import React, { Component } from "react";
 import { Card, Button, Icon, Table, Modal, message } from "antd";
 import { connect } from "react-redux";
 
-import { getCategoryListAsync, addCategoryAsync } from "$redux/actions";
+import {
+  getCategoryListAsync,
+  addCategoryAsync,
+  updateCategoryAsync
+} from "$redux/actions";
 import AddCategoryForm from "./add-category-form";
 
 @connect(state => ({ categories: state.categories }), {
   getCategoryListAsync,
-  addCategoryAsync
+  addCategoryAsync,
+  updateCategoryAsync
 })
 class Category extends Component {
   state = {
-    isShowAddCategory: false // 是否展示对话框
+    isShowCategoryModal: false, // 是否展示对话框
+    // isUpdateCategory:false,
+    category: {}
   };
   componentDidMount() {
     this.props.getCategoryListAsync();
@@ -24,12 +31,18 @@ class Category extends Component {
     },
     {
       title: "操作",
-      dataIndex: "operation",
+      // dataIndex: "name",
       // 因为这个地方是固定 可以直接写死
-      render() {
+      render: category => {
+        /*
+            render方法参数的值看 dataIndex
+            如果 dataIndex 没有，得到就是整个数据
+        */
         return (
           <div>
-            <Button type="link">修改分类</Button>
+            <Button type="link" onClick={this.showCategoryModal(category)}>
+              修改分类
+            </Button>
             <Button type="link">删除分类</Button>
           </div>
         );
@@ -38,7 +51,7 @@ class Category extends Component {
   ];
 
   /**
-   * 添加分类
+   * 添加/修改分类
    */
   addCategory = () => {
     /*
@@ -49,16 +62,28 @@ class Category extends Component {
       4. 请求成功，就会更新前端数据
     */
     const { validateFields, resetFields } = this.addCategoryForm.props.form;
+    const {
+      category: { name, _id }
+    } = this.state;
+
     validateFields((err, vaules) => {
       if (!err) {
         // 获取表单数据
         const { categoryName } = vaules;
         // 3. 发送请求，更新后端数据
-        this.props
-          .addCategoryAsync(categoryName)
+        // 添加 / 修改 --> category.name
+        let promise = null;
+        if (name) {
+          // 修改
+          promise = this.props.updateCategoryAsync(_id, categoryName);
+        } else {
+          // 添加
+          promise = this.props.addCategoryAsync(categoryName);
+        }
+        promise
           .then(() => {
             // 提示
-            message.success("添加分类成功");
+            message.success(`${name?'修改':'添加'}分类成功`);
             // 清空表单数据 不写代表所有表单组件清空
             resetFields();
             // 隐藏对话框
@@ -76,7 +101,7 @@ class Category extends Component {
    */
   hiddenAddCategory = () => {
     this.setState({
-      isShowAddCategory: false
+      isShowCategoryModal: false
     });
     const { resetFields } = this.addCategoryForm.props.form;
     // 清空表单数据 不写代表所有表单组件清空
@@ -84,13 +109,39 @@ class Category extends Component {
   };
 
   /**
-   * 显示添加分类对话框
+   * 显示添加/修改分类对话框
    */
-  showAddCategory = () => {
-    this.setState({
-      isShowAddCategory: true
-    });
+  showCategoryModal = (category = {}) => {
+    return () => {
+      this.setState({
+        isShowCategoryModal: true,
+        category
+        // isUpdateCategory:category.name
+      });
+    };
   };
+
+  /* showAddCategoryModal=()=>{
+    return ()=>{
+      this.setState({
+        isUpdateCategory:false,
+        category:{}
+      })
+      this.showCategoryModal();
+    }
+
+  }
+  
+  showUpdateCategoryModal=(category)=>{
+    return ()=>{
+      this.setState({
+        isUpdateCategory:true,
+        category
+      })
+      this.showCategoryModal();
+    }
+
+  } */
 
   render() {
     /* const data = [
@@ -114,13 +165,13 @@ class Category extends Component {
     ]; */
 
     const { categories } = this.props;
-    const { isShowAddCategory } = this.state;
+    const { isShowCategoryModal, category } = this.state;
 
     return (
       <Card
         title="分类列表"
         extra={
-          <Button type="primary" onClick={this.showAddCategory}>
+          <Button type="primary" onClick={this.showCategoryModal()}>
             <Icon type="plus" />
             分类列表
           </Button>
@@ -140,13 +191,14 @@ class Category extends Component {
           rowKey="_id" // 根据api文档设置key
         />
         <Modal
-          title="添加分类"
-          visible={isShowAddCategory}
+          title={category.name ? "修改分类" : "添加分类"}
+          visible={isShowCategoryModal}
           onOk={this.addCategory}
           onCancel={this.hiddenAddCategory}
           width={300} // 设置宽度
         >
           <AddCategoryForm
+            categoryName={category.name}
             // 每个组件的form属性只能收集到自己的数据 要用子组件收集的数据就用以下官方提供的方法
             wrappedComponentRef={form => (this.addCategoryForm = form)}
           />

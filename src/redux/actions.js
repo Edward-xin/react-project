@@ -3,9 +3,9 @@
  * 同步action
  * 异步action
  */
-import { requLogin,reqGetCategoryList,reqAddCategory} from "../api";
+import { requLogin,reqGetCategoryList,reqAddCategory,reqUpdateCategory} from "../api";
 import { setItem } from "../utils/storage";
-import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY_LIST,ADD_CATEGORY} from './action-types'
+import {SAVA_USER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY_LIST,ADD_CATEGORY,UPDATE_CATEGORY} from './action-types'
 
 
 export const changeLanguage = (lang) =>({type:CHANGE_LANGUAGE,data:lang})
@@ -74,6 +74,18 @@ export const addCategoryAsync= (categoryName)=>{
      return reqAddCategory(categoryName)
       .then(response=>{
         dispatch(addCategory(response))
+      })
+  }
+}
+
+const updateCategory=category=>({type:UPDATE_CATEGORY,data:category})
+// 异步action 发送请求获取分类数据
+export const updateCategoryAsync= (categoryId,categoryName)=>{
+  return dispatch=>{
+     // 发送请求
+     return reqUpdateCategory(categoryId,categoryName)
+      .then(response=>{
+        dispatch(updateCategory(response))
       })
   }
 }

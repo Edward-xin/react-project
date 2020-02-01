@@ -7,7 +7,8 @@ import {
   REMOVE_USER,
   CHANGE_LANGUAGE,
   GET_CATEGORY_LIST,
-  ADD_CATEGORY
+  ADD_CATEGORY,
+  UPDATE_CATEGORY
 } from "./action-types";
 import { getItem } from "../utils/storage";
 
@@ -44,7 +45,14 @@ function categories(prevState = initCategories, action) {
     case GET_CATEGORY_LIST:
       return action.data;
     case ADD_CATEGORY:
-      return [...prevState,action.data]
+      return [...prevState, action.data];
+    case UPDATE_CATEGORY:
+      return prevState.map(category => {
+        if (category._id === action.data._id) {
+          return action.data;
+        }
+        return category;
+      });
     default:
       return prevState;
   }

@@ -3,9 +3,12 @@
  */
 
 import axios from "axios";
+import {message} from 'antd'
 
 import errCode from "../config/error-code";
 import store from "$redux/store";
+import {removeItem} from '$utils/storage'
+import {removeUser} from '$redux/actions'
 
 // 创建axios实例 配置axios拦截器
 const axiosInstance = axios.create({
@@ -73,7 +76,17 @@ axiosInstance.interceptors.response.use(
     if (err.response) {
       // 接收到响应  但响应是失败的
       // 根据响应状态码判断错误
-      errMessage = errCode[err.response.status];
+      const status=err.response.statuserr
+      errMessage = errCode[status];
+
+      // token过期处理
+      if(status === 401){
+        // 过期就让用户重新登录 --> 用户数据清空（redux和localstorage）
+        removeItem('user');
+        store.dispatch(removeUser())
+        // 提示
+        message.error('登录过期，请重新登录~')
+      }
     } else {
       // 没有接收到响应
       // 根据err的message属性（错误信息）来判断错误

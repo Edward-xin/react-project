@@ -124,12 +124,13 @@ class Category extends Component {
    * 隐藏添加分类对话框
    */
   hiddenAddCategory = () => {
-    this.setState({
-      isShowCategoryModal: false
-    });
     const { resetFields } = this.addCategoryForm.props.form;
     // 清空表单数据 不写代表所有表单组件清空
     resetFields();
+
+    this.setState({
+      isShowCategoryModal: false
+    });
   };
 
   /**

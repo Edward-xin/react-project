@@ -51,7 +51,7 @@ export default class Product extends Component {
   getProductList = (pageNum, pageSize) => {
     reqGetProductList(pageNum, pageSize)
       .then(response => {
-        console.log(response);
+        // console.log(response);
         this.setState({
           productList: response.list,
           total: response.total
@@ -65,6 +65,12 @@ export default class Product extends Component {
 
   componentDidMount() {
     this.getProductList(1, 3);
+  }
+
+  // 显示添加商品组件
+  showAddProduct=()=>{
+    // 切换地址栏
+    this.props.history.push('/product/add');
   }
 
   render() {
@@ -85,7 +91,7 @@ export default class Product extends Component {
           </div>
         }
         extra={
-          <Button type="primary">
+          <Button type="primary" onClick={this.showAddProduct}>
             <Icon type="plus" />
             添加商品
           </Button>

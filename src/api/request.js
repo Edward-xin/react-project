@@ -76,7 +76,7 @@ axiosInstance.interceptors.response.use(
     if (err.response) {
       // 接收到响应  但响应是失败的
       // 根据响应状态码判断错误
-      const status=err.response.statuserr
+      const status=err.response.status;
       errMessage = errCode[status];
 
       // token过期处理

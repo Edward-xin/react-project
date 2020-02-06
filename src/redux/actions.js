@@ -8,7 +8,7 @@ import {
   reqGetCategoryList,
   reqAddCategory,
   reqUpdateCategory,
-  reqDeleteCategory
+  reqDeleteCategory,
 } from "../api";
 import { setItem } from "../utils/storage";
 import {

@@ -92,7 +92,10 @@ class HeaderMain extends Component {
       if(menu.children){
         for (let index = 0; index < menu.children.length; index++) {
           const cMenu = menu.children[index];
-          if(cMenu.path=== pathname){
+          // 如果pathname是 /product 返回 product
+          // 如果pathname是 /product/add 返回 product
+          // cMenu.path是 /product  包含关系 同pathname.includes(cMenu.path)
+          if(pathname.indexOf(cMenu.path) !== -1){
             return cMenu.title
           }
           

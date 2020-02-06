@@ -23,7 +23,11 @@ class Category extends Component {
     category: {}
   };
   componentDidMount() {
-    this.props.getCategoryListAsync();
+    // 如果已经redux里已经有分类数据 就不需要再请求一次
+    if(!this.props.categories.length){
+      // 不存在 就发送请求获取数据
+      this.props.getCategoryListAsync();
+    }
   }
   // 可以直接当做实例对象的属性 避免重复渲染
   columns = [

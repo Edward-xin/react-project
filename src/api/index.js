@@ -83,3 +83,19 @@ export const reqAddProduct = ({ name, desc, categoryId, price, datail }) => {
     }
   });
 };
+
+// 请求修改商品数据
+export const reqUpdateProduct = ({ name, desc, categoryId, price, datail,productId}) => {
+  return axiosInstance({
+    url: "/product/update",
+    method: "POST",
+    data: {
+      name,
+      desc,
+      categoryId,
+      price,
+      datail,
+      productId
+    }
+  });
+};

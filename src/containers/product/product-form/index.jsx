@@ -14,7 +14,7 @@ import BraftEditor from "braft-editor";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getCategoryListAsync } from "$redux/actions";
-import { reqAddProduct } from "$api";
+import { reqAddProduct, reqUpdateProduct } from "$api";
 
 import "./index.less";
 // 引入富文本编辑器组件的样式
@@ -44,20 +44,48 @@ class ProductForm extends Component {
     }
   }
 
+  // 判断当前是添加商品/修改商品
+  isAddProduct = () => {
+    return this.props.location.pathname.indexOf("/update/") === -1;
+  };
+
   submit = e => {
     e.preventDefault();
     // 校验表单并收集数据
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // console.log(values);
-        const { name, desc, categoryId, price, datail } = values;
+        const { name, desc, categoryId, price, detail } = values;
         // console.log(detail.toHTML()); // <p>ccc</p> 带标签
         // console.log(detail.toText()); // ccc
 
-        // 发送请求
-        reqAddProduct({ name, desc, categoryId, price, datail })
-          .then(() => {
-            message.success("添加商品成功~");
+        let promise = null;
+        const isAddProduct=this.isAddProduct();
+        
+        if (isAddProduct) {
+          // 发送修改商品请求请求
+          promise = reqUpdateProduct({
+            name,
+            desc,
+            categoryId,
+            price,
+            detail: detail.toHTML(),
+          });
+        }else{
+          // 发送添加商品请求请求
+          promise = reqUpdateProduct({
+            name,
+            desc,
+            categoryId,
+            price,
+            detail: detail.toHTML(),
+            // productId: this.props.location.state._id // 问题：如果是直接访问，没有state
+            productId: this.props.match.params.id
+          });
+        }
+
+        promise.then(() => {
+            message.success(`${isAddProduct ?'添加':'修改'}商品成功~`);
             // 跳转到商品管理页面(可供用户查看)
             this.props.history.push("/product");
           })
@@ -121,7 +149,7 @@ class ProductForm extends Component {
     } = this.props;
 
     // 获取路由传递的数据: state是商品数据
-    const { state, pathname } = location;
+    const { state } = location;
     /*
       需要判断当前操作是：添加商品还是修改商品
         1. 如果是添加商品，什么都不操作   /product/add
@@ -136,11 +164,11 @@ class ProductForm extends Component {
         最终解决：判断请求地址!
     */
     // 标识：是否是添加商品
-    let isAddProduct = true;
+    const isAddProduct = this.isAddProduct();
 
-    if (pathname.indexOf("/update/") !== -1) {
+    /* if (pathname.indexOf("/update/") !== -1) {
       isAddProduct = false;
-    }
+    } */
 
     return (
       <Card
@@ -218,7 +246,7 @@ class ProductForm extends Component {
                   `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
                 // 输入时如果不是数字（是字母/中文），删除掉
-                parser={value => value.replace(/\￥\s?|(,*)/g, "")}
+                parser={value => value.replace(/￥\s?|(,*)/g, "")}
                 className="product-price"
               />
             )}
@@ -231,8 +259,10 @@ class ProductForm extends Component {
                   message: "请输入商品详情"
                 }
               ],
-               // 纯文本 BraftEditor 组件是不能显示的。需要转换成 EditorState。(通过createEditorState)
-              initialValue: isAddProduct ? "" : BraftEditor.createEditorState(state.detail)
+              // 纯文本 BraftEditor 组件是不能显示的。需要转换成 EditorState。(通过createEditorState)
+              initialValue: isAddProduct
+                ? ""
+                : BraftEditor.createEditorState(state.detail)
             })(<BraftEditor className="product-detail" />)}
           </Item>
           <Item>

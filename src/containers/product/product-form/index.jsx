@@ -11,6 +11,7 @@ import {
 } from "antd";
 // 引入富文本编辑器组件
 import BraftEditor from "braft-editor";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getCategoryListAsync } from "$redux/actions";
 import { reqAddProduct } from "$api";
@@ -33,7 +34,7 @@ const { Option } = Select;
   getCategoryListAsync
 })
 @Form.create()
-class AddProduct extends Component {
+class ProductForm extends Component {
   // 因为数据只要请求一次
   componentDidMount() {
     // 如果已经redux里已经有分类数据 就不需要再请求一次
@@ -58,13 +59,45 @@ class AddProduct extends Component {
           .then(() => {
             message.success("添加商品成功~");
             // 跳转到商品管理页面(可供用户查看)
-            this.props.history.push('/product');
+            this.props.history.push("/product");
           })
           .catch(err => {
             message.error(err);
           });
       }
     });
+  };
+
+  // 处理分类id的问题
+  handleCategoryId = isAddProduct => {
+    // 如果是添加商品页面 显示暂无分类
+    if (isAddProduct) {
+      return "0";
+    }
+    // 获取redux中所有的分类数据categories
+    const {
+      categories,
+      location: {
+        state: { categoryId }
+      }
+    } = this.props;
+
+    // 去所有分类数据中查找是否有指定商品的分类数据
+    // find() 返回是一个ture的元素 只要有一个找到 就不会继续遍历数组
+    const category = categories.find(category => {
+      /*
+        category._id 指的是分类数据中的id
+        categoryId 指的是路由传参的商品数据的分类id
+      */
+      return category._id === categoryId;
+    });
+
+    if (category) {
+      // 如果找到了，说明商品数据的分类是存在的
+      return categoryId;
+    }
+    // 没有值，没有找到，说明商品分类被删除掉了
+    return "0";
   };
 
   render() {
@@ -83,15 +116,40 @@ class AddProduct extends Component {
 
     const {
       form: { getFieldDecorator },
-      categories
+      categories,
+      location
     } = this.props;
+
+    // 获取路由传递的数据: state是商品数据
+    const { state, pathname } = location;
+    /*
+      需要判断当前操作是：添加商品还是修改商品
+        1. 如果是添加商品，什么都不操作   /product/add
+        2. 如果是修改商品，/product/update/商品id
+          需要将Card的title显示成修改商品
+          表单需要显示商品内容
+      怎么判断？
+        通过state判断？ 因为添加商品state是undefined，而修改商品state是{}
+          问题: 如果直接访问 修改商品 页面，而不是从商品页面点击修改按钮进来的，state就没有数据
+                原因：之所有有state数据，是因为通过点击修改按钮push(xxx, 传参)
+        
+        最终解决：判断请求地址!
+    */
+    // 标识：是否是添加商品
+    let isAddProduct = true;
+
+    if (pathname.indexOf("/update/") !== -1) {
+      isAddProduct = false;
+    }
 
     return (
       <Card
         title={
           <div>
-            <Icon type="arrow-left" className="go-back" />
-            添加商品
+            <Link to="/product">
+              <Icon type="arrow-left" className="go-back" />
+            </Link>
+            {isAddProduct ? "添加商品" : "修改商品"}
           </div>
         }
       >
@@ -103,7 +161,9 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品名称"
                 }
-              ]
+              ],
+              // 表单的初始值
+              initialValue: isAddProduct ? "" : state.name
             })(<Input placeholder="请输入商品名称" />)}
           </Item>
           <Item label="商品描述">
@@ -113,7 +173,8 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品描述"
                 }
-              ]
+              ],
+              initialValue: isAddProduct ? "" : state.desc
             })(<Input placeholder="请输入商品描述" />)}
           </Item>
           <Item label="商品分类">
@@ -123,13 +184,16 @@ class AddProduct extends Component {
                   required: true,
                   message: "请选择商品分类"
                 }
-              ]
-              // initialValue: 1, // 默认值
+              ],
+              initialValue: this.handleCategoryId(isAddProduct)
             })(
               <Select placeholder="请选择商品分类">
+                <Option key="0" value="0">
+                  暂无分类
+                </Option>
                 {categories.map(category => {
                   return (
-                    <Option keye={category._id} value={category._id}>
+                    <Option key={category._id} value={category._id}>
                       {category.name}
                     </Option>
                   );
@@ -144,7 +208,8 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品价格"
                 }
-              ]
+              ],
+              initialValue: isAddProduct ? "" : state.price
             })(
               <InputNumber
                 // defaultValue={1000} // 默认值
@@ -165,7 +230,9 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品详情"
                 }
-              ]
+              ],
+               // 纯文本 BraftEditor 组件是不能显示的。需要转换成 EditorState。(通过createEditorState)
+              initialValue: isAddProduct ? "" : BraftEditor.createEditorState(state.detail)
             })(<BraftEditor className="product-detail" />)}
           </Item>
           <Item>
@@ -179,4 +246,4 @@ class AddProduct extends Component {
   }
 }
 
-export default AddProduct;
+export default ProductForm;

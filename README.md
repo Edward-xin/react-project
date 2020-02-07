@@ -183,3 +183,7 @@
 * 当修改了searchValue的值(input里的值)但是没点击搜索 还是按照之前的搜索 需要将searchValue值改回来
 	* 请求成功时更新searchValue值 
 	* input和状态中的searchValue值绑定在一起
+
+### 更新商品状态功能
+* api定义请求方式 发送请求
+### 商品详情功能

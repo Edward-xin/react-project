@@ -117,3 +117,16 @@ export const reqSearchProduct = ({ searchType, searchValue, pageNum, pageSize })
     }
   });
 };
+
+// 请求更新商品状态数据
+export const reqUpdateProductStatus = (productId, status) => {
+  return axiosInstance({
+    url: '/product/update/status',
+    method: 'POST',
+    data: {
+      productId,
+      status
+    }
+  });
+};
+

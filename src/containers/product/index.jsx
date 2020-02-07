@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Card, Select, Input, Button, Icon, Table, message } from "antd";
 
-import { reqGetProductList, reqSearchProduct } from "$api";
+import { reqGetProductList, reqSearchProduct ,reqUpdateProductStatus} from "$api";
 
 export default class Product extends Component {
   state = {
@@ -26,16 +26,43 @@ export default class Product extends Component {
     },
     {
       title: "商品价格",
-      dataIndex: "price"
+      dataIndex: "price",
+      // 如果要显示的内容除了数据本身还有一些其他东西，使用render方法
+      render: price => {
+        return `￥ ${price}`;
+      }
     },
     {
       title: "商品状态",
-      dataIndex: "status",
-      render: () => {
+      // dataIndex: "status",
+      render: ({ _id, status }) => {
+        /*
+          status：
+            1 已下架
+            2 已上架
+        */
+       if (status === 1) {
         return (
           <div>
-            <Button type="primary">上架</Button>
+            <Button
+              type='primary'
+              onClick={this.updateProductStatus(_id, status)}
+            >
+              上架
+            </Button>
             <span>已下架</span>
+          </div>
+        );
+      }
+        return (
+          <div>
+            <Button
+              type='primary'
+              onClick={this.updateProductStatus(_id, status)}
+            >
+              下架
+            </Button>
+            <span>已上架</span>
           </div>
         );
       }
@@ -59,6 +86,39 @@ export default class Product extends Component {
       }
     }
   ];
+
+  // 更新商品状态
+  updateProductStatus = (productId, status) => {
+    return () => {
+      /*
+        状态要传入修改后的值
+          1 --> 2
+          2 --> 1
+      */
+     const newStatus = 3 - status;
+      reqUpdateProductStatus(productId, newStatus)
+        .then(res => {
+          // 请求成功： 更新state中的数据
+          this.setState({
+            productList: this.state.productList.map((product) => {
+              if (product._id === productId) {
+                return {
+                  // 展开对象：包含对象的所有属性
+                  ...product,
+                  // 添加一个新属性，覆盖掉旧属性
+                  status: newStatus
+                }
+              }
+              return product;
+            })
+          })
+          message.success('更新商品状态成功~');
+        })
+        .catch(err => {
+          message.error(err);
+        });
+    };
+  };
 
   // 显示更新商品页面
   // 高阶函数：通过闭包来使用传入的值

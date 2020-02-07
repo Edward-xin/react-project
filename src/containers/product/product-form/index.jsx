@@ -73,7 +73,7 @@ class ProductForm extends Component {
           });
         }else{
           // 发送添加商品请求请求
-          promise = reqUpdateProduct({
+          promise = reqAddProduct({
             name,
             desc,
             categoryId,

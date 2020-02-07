@@ -170,3 +170,16 @@
 	* 处理分类id的问题
 	* 富文本编辑器初始化
 * 发送修改商品数据的请求(封装函数 复用代码)
+
+### 添加loading状态图 table组价的loading属性
+
+### 完成搜索商品功能
+* 受控组件收集表单数据
+	* 定义状态 绑定change事件收集下拉列表表单数据 
+	* 收集input表单数据
+* 请求搜索商品数据(封装函数 复用代码)
+* 封装函数利用定义一个属性区分普通获取商品数据和搜索商品数据
+* 当修改了searchValue的值(input里的值)但是没点击搜索 点击下面的分页器应是之前的searchValue所搜索的内，即currentSearchValue
+* 当修改了searchValue的值(input里的值)但是没点击搜索 还是按照之前的搜索 需要将searchValue值改回来
+	* 请求成功时更新searchValue值 
+	* input和状态中的searchValue值绑定在一起

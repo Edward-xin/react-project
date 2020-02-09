@@ -9,6 +9,7 @@ import {
   reqAddCategory,
   reqUpdateCategory,
   reqDeleteCategory,
+  reqRoleList
 } from "../api";
 import { setItem } from "../utils/storage";
 import {
@@ -18,7 +19,8 @@ import {
   GET_CATEGORY_LIST,
   ADD_CATEGORY,
   UPDATE_CATEGORY,
-  DELETE_CATEGORY
+  DELETE_CATEGORY,
+  GET_ROLE_LIST
 } from "./action-types";
 
 export const changeLanguage = lang => ({ type: CHANGE_LANGUAGE, data: lang });
@@ -101,6 +103,18 @@ export const deleteCategoryAsync = categoryId => {
     // 发送请求
     return reqDeleteCategory(categoryId).then(response => {
       dispatch(deleteCategory(response));
+    });
+  };
+};
+
+
+const getRoleList = roles => ({ type:GET_ROLE_LIST, data: roles });
+// 异步action
+export const getRoleListAsync = () => {
+  return dispatch => {
+    // 发送请求
+    return reqRoleList().then(response => {
+      dispatch(getRoleList(response));
     });
   };
 };

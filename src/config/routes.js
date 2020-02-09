@@ -6,6 +6,7 @@ import Home from "../components/home";
 import Category from '../containers/category';
 import Product from '../containers/product'
 import ProductForm from '../containers/product/product-form'
+import Role from '../containers/role'
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     // 因为有很多商品 所以是一对多的关系
     path: "/product/update/:id",
     component: ProductForm,
+    exact: true
+  },
+  {
+    path: "/role",
+    component: Role,
     exact: true
   },
 

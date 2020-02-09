@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { Menu, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
 
 import menus from "$conf/menus";
 
 const { SubMenu, Item } = Menu;
 
+@connect(state => ({ roleMenus: state.user.user.menus }))
 // withRouter高阶组件 提供路由组件的三大属性
 @withRouter
 class LeftNav extends Component {
@@ -75,7 +77,49 @@ class LeftNav extends Component {
       pathname = "/product";
     }
 
-    const openKey = this.findOpenKey(pathname, menus);
+    // 获取用户的权限（redux里）
+    const roleMenus = this.props.roleMenus;
+
+    const filterMenus = menus.reduce((p, c) => {
+      // 对c --> 遍历出来的菜单，进行深度克隆 --> 后面操作就不会影响原数据
+      c = JSON.parse(JSON.stringify(c));
+
+      // 如果一级菜单不属于权限列表，并也没有二级菜单
+      // if (roleMenus.indexOf(c.path) === -1 && !c.children) {
+      if (roleMenus.indexOf(c.path) !== -1 || c.children) {
+
+        // 二级菜单
+        if (c.children) {
+
+          // 如果子菜单path在roleMenus中，返回值true, 就不会过滤
+          // 如果子菜单path不在roleMenus中，返回值false, 就会被过滤掉
+          const children = c.children.filter(item => {
+            return roleMenus.indexOf(item.path) !== -1;
+          });
+
+          // 如果子菜单过滤后是空数组，是会显示菜单的，但是实际上是不需要的
+          // 不需要整个菜单都不需要添加
+          if (!children.length) {
+            return p;
+          }
+
+          // c.children直接赋值 --> 修改了原数组 --> menus数组
+          // jiaming测试时，将menus数组的 /product 删掉了
+          // peihua测试时，此时menus数组中就没有 /product。
+          // 解决：不能修改原数组
+          // 在外面深度克隆一份
+          c.children = children;
+        }
+
+        // 统一添加
+        p.push(c);
+      }
+
+      return p;
+    }, []);
+
+
+    const openKey = this.findOpenKey(pathname, filterMenus);
     return (
       <Menu
         theme="dark" // 主题颜色
@@ -83,7 +127,7 @@ class LeftNav extends Component {
         defaultOpenKeys={[openKey]} // 默认展开的菜单
         mode="inline" // 展开子菜单方式
       >
-        {this.createMenus(menus)}
+        {this.createMenus(filterMenus)}
       </Menu>
     );
   }

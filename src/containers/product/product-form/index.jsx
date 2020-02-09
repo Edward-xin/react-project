@@ -14,7 +14,7 @@ import BraftEditor from "braft-editor";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getCategoryListAsync } from "$redux/actions";
-import { reqAddProduct, reqUpdateProduct } from "$api";
+import { reqAddProduct, reqUpdateProduct, reqGetProduct } from "$api";
 
 import "./index.less";
 // 引入富文本编辑器组件的样式
@@ -35,12 +35,33 @@ const { Option } = Select;
 })
 @Form.create()
 class ProductForm extends Component {
+  state = {
+    // 商品数据
+    product: {}
+  };
   // 因为数据只要请求一次
   componentDidMount() {
     // 如果已经redux里已经有分类数据 就不需要再请求一次
     if (!this.props.categories.length) {
       // 不存在 就发送请求获取数据
       this.props.getCategoryListAsync();
+    }
+    // 判断当前是否是修改商品 并且 是否有state数据
+    if (!this.isAddProduct() && !this.props.location.state) {
+      // 在修改商品页面且state没有值，需要请求数据
+      // 获取商品id
+      const productId = this.props.match.params.id;
+      reqGetProduct(productId)
+        .then(res => {
+          // 请求完数据之后，数据要展示：更新状态
+          // (只有单个组件，就是单个组件state。如果多个组件用，就是redux)
+          this.setState({
+            product: res
+          });
+        })
+        .catch(err => {
+          message.error(err);
+        });
     }
   }
 
@@ -60,20 +81,20 @@ class ProductForm extends Component {
         // console.log(detail.toText()); // ccc
 
         let promise = null;
-        const isAddProduct=this.isAddProduct();
-        
+        const isAddProduct = this.isAddProduct();
+
         if (isAddProduct) {
-          // 发送修改商品请求请求
-          promise = reqUpdateProduct({
+          // 发送添加商品请求请求
+          promise = reqAddProduct({
             name,
             desc,
             categoryId,
             price,
-            detail: detail.toHTML(),
+            detail: detail.toHTML()
           });
-        }else{
-          // 发送添加商品请求请求
-          promise = reqAddProduct({
+        } else {
+          // 发送修改商品请求请求
+          promise = reqUpdateProduct({
             name,
             desc,
             categoryId,
@@ -84,8 +105,9 @@ class ProductForm extends Component {
           });
         }
 
-        promise.then(() => {
-            message.success(`${isAddProduct ?'添加':'修改'}商品成功~`);
+        promise
+          .then(() => {
+            message.success(`${isAddProduct ? "添加" : "修改"}商品成功~`);
             // 跳转到商品管理页面(可供用户查看)
             this.props.history.push("/product");
           })
@@ -97,18 +119,14 @@ class ProductForm extends Component {
   };
 
   // 处理分类id的问题
-  handleCategoryId = isAddProduct => {
+  handleCategoryId = (isAddProduct, product) => {
     // 如果是添加商品页面 显示暂无分类
     if (isAddProduct) {
       return "0";
     }
     // 获取redux中所有的分类数据categories
-    const {
-      categories,
-      location: {
-        state: { categoryId }
-      }
-    } = this.props;
+    const { categories } = this.props;
+    const {categoryId}=product;
 
     // 去所有分类数据中查找是否有指定商品的分类数据
     // find() 返回是一个ture的元素 只要有一个找到 就不会继续遍历数组
@@ -148,8 +166,21 @@ class ProductForm extends Component {
       location
     } = this.props;
 
-    // 获取路由传递的数据: state是商品数据
-    const { state } = location;
+    // 获取路由传递的数据: state 商品数据
+    const routeData = location.state;
+
+    const { product } = this.state;
+
+    /*
+      数据可以来源于两个方面：
+        路由传递的参数： routeData（有值：说明传参了，是对象， 没有值：说明没有传参，是undefined）
+        组件请求回来的数据：属于this.state.product
+          值为{}（为了避免一上来没有数据时state.name报错，所以初始化为空对象）。说明没有数据
+          值为{name, categoryId},才说明数据请求回来了
+    */
+    // 选择使用：有数据的变量（如果数据不存在就是{}，如果数据存在就是具体数据）
+    const state = routeData || product;
+
     /*
       需要判断当前操作是：添加商品还是修改商品
         1. 如果是添加商品，什么都不操作   /product/add
@@ -213,7 +244,7 @@ class ProductForm extends Component {
                   message: "请选择商品分类"
                 }
               ],
-              initialValue: this.handleCategoryId(isAddProduct)
+              initialValue: this.handleCategoryId(isAddProduct,state)
             })(
               <Select placeholder="请选择商品分类">
                 <Option key="0" value="0">

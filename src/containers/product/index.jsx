@@ -10,7 +10,9 @@ export default class Product extends Component {
     isLoading: false,
     // 收集表单数据
     searchType: "productName",
-    searchValue: ""
+    searchValue: "",
+    // 当前页数
+    current:1
   };
   // 实例对象的属性
   currentSearchValue = "";
@@ -187,7 +189,9 @@ export default class Product extends Component {
           total: response.total,
           // 当修改了searchValue的值(input里的值)但是没点击搜索 还是按照之前的搜索 需要将searchValue值改回来
           // 同时input和状态中的searchValue值绑定在一起
-          searchValue: currentSearchValue
+          searchValue: currentSearchValue,
+          // 更新当前页数
+          current:pageNum
         });
         message.success(
           `${currentSearchValue ? "搜索" : "获取"}商品列表数据成功~`
@@ -246,7 +250,8 @@ export default class Product extends Component {
       total,
       isLoading,
       searchType,
-      searchValue
+      searchValue,
+      current
     } = this.state;
     return (
       <Card
@@ -287,7 +292,9 @@ export default class Product extends Component {
             // 页码发生变化触发的函数
             onChange: this.getProductList,
             // pageSize 变化的回调
-            onShowSizeChange: this.getProductList
+            onShowSizeChange: this.getProductList,
+            // 当前页 current:current 简写
+            current
           }}
           rowKey="_id"
           // 是否在加载中

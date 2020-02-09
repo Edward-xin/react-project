@@ -69,6 +69,17 @@ export const reqGetProductList = (pageNum, pageSize) => {
   });
 };
 
+// 请求获取单个商品数据
+export const reqGetProduct = productId => {
+  return axiosInstance({
+    method: 'GET',
+    url: '/product/get',
+    params: {
+      productId
+    }
+  });
+};
+
 // 请求添加商品数据
 export const reqAddProduct = ({ name, desc, categoryId, price, datail }) => {
   return axiosInstance({
@@ -148,3 +159,4 @@ export const reqAddRole = (name) => {
     }
   });
 };
+

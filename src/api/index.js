@@ -138,3 +138,13 @@ export const reqRoleList = () => {
   });
 };
 
+// 请求添加角色数据
+export const reqAddRole = (name) => {
+  return axiosInstance({
+    url: '/role/add',
+    method: 'POST',
+    data:{
+      name
+    }
+  });
+};

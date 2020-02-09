@@ -10,7 +10,8 @@ import {
   ADD_CATEGORY,
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
-  GET_ROLE_LIST
+  GET_ROLE_LIST,
+  ADD_ROLE
 } from "./action-types";
 import { getItem } from "../utils/storage";
 
@@ -63,16 +64,17 @@ function categories(prevState = initCategories, action) {
 }
 
 // 如果是新状态数据，就得创建一个新的reducer函数
-const initRoles=[];
-function roles( prevState = initRoles,action){
+const initRoles = [];
+function roles(prevState = initRoles, action) {
   switch (action.type) {
     case GET_ROLE_LIST:
       return action.data;
+    case ADD_ROLE:
+      return [...prevState,action.data];
     default:
       return prevState;
   }
 }
-
 
 export default combineReducers({
   user,

@@ -1,16 +1,18 @@
 import React, { Component } from "react";
-import { Card, Button, Radio, Table, message, Modal } from "antd";
+import { Card, Button, Table, message, Modal } from "antd";
 import dayjs from "dayjs";
 import { connect } from "react-redux";
 
-import { reqGetUser } from "$api";
-import {getRoleListAsync} from "$redux/actions";
+import { reqGetUser, reqAddUser  } from "$api";
+import { getRoleListAsync } from "$redux/actions";
+import UserForm from "./user-form";
 
 @connect(state => ({ roles: state.roles }), { getRoleListAsync })
 class User extends Component {
   state = {
     users: [],
-    isLoding: false
+    isLoding: false,
+    isShowUserModal: false
   };
   // 缓存数据
   columns = [
@@ -75,25 +77,60 @@ class User extends Component {
         });
       });
 
-      if (!this.props.roles.length) {
-        this.props
-          .getRoleListAsync()
-          .then(() => {
-            message.success('获取角色列表数据成功~');
+    if (!this.props.roles.length) {
+      this.props
+        .getRoleListAsync()
+        .then(() => {
+          message.success("获取角色列表数据成功~");
+        })
+        .catch(err => {
+          message.error(err);
+        });
+    }
+  }
+  switchModal = isShowUserModal => {
+    return () => {
+      this.setState({
+        isShowUserModal
+      });
+    };
+  };
+   // 创建用户
+   addUser = () => {
+    const { validateFields, resetFields } = this.userForm.props.form;
+
+    validateFields((err, values) => {
+      if (!err) {
+        // console.log(values);
+        reqAddUser(values)
+          .then(res => {
+            message.success("创建用户成功");
+            this.setState({
+              // 将数据添加到state中进行展示
+              users: [...this.state.users, res],
+              // 隐藏对话框
+              isShowUserModal: false
+            });
+            // 清空表单数据
+            resetFields();
           })
           .catch(err => {
             message.error(err);
           });
       }
-  }
-
+    });
+  };
+  
   render() {
-    const { isLoding, users } = this.state;
+    const { isLoding, users,isShowUserModal } = this.state;
+    const { roles } = this.props;
     return (
       <Card
         title={
           <div>
-            <Button type="primary">添加用户</Button>
+            <Button type="primary" onClick={this.switchModal(true)}>
+              添加用户
+            </Button>
           </div>
         }
       >
@@ -104,29 +141,17 @@ class User extends Component {
           rowKey="_id"
           loading={isLoding}
         />
-        {/* <Modal
-          title="创建角色"
-          visible={isShowAddRoleModal}
-          onOk={this.addRole}
-          onCancel={this.switchModal("isShowAddRoleModal", false)}
+        <Modal
+          title="创建用户"
+          visible={isShowUserModal}
+          onOk={this.addUser}
+          onCancel={this.switchModal(false)}
         >
-          <AddRoleForm
-            // 获取AddRoleForm组件的form属性
-            wrappedComponentRef={form => (this.addRoleForm = form)}
+          <UserForm
+            roles={roles}
+            wrappedComponentRef={form => (this.userForm = form)}
           />
         </Modal>
-        <Modal
-          title="设置角色权限"
-          visible={isShowUpdateRoleModal}
-          onOk={this.UpdateRole}
-          onCancel={this.switchModal("isShowUpdateRoleModal", false)}
-        >
-          <UpdateRoleForm
-            role={role}
-            // 获取UpdateRoleForm组件的form属性
-            wrappedComponentRef={form => (this.updateRoleForm = form)}
-          />
-        </Modal> */}
       </Card>
     );
   }

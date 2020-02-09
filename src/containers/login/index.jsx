@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import { savaUserAsync } from "../../redux/actions";
 import withCheckLogin from '../with-check-login'
+import { validator } from '$utils/tools';
 
 // 图片必须引入，才会被webpack打包
 import logo from '../../assets/imgs/logo.png';
@@ -18,34 +19,7 @@ const { Item } = Form;
 @Form.create() // 高阶组件 给Login组件传递form属性
 class Login extends Component {
   // 自定义校验 传入三个参数 callback必须被调用
-  validator = (rule, value, callback) => {
-    /**
-     * rule.field 获取表单key
-     * value 获取表单输入的内容
-     */
-    // console.log(rule, value);
-
-    const name = rule.field === "username" ? "用户名" : "密码";
-
-    /**
-     * callback()调用不传参 表单校验成功
-     * callback(message)调用传参 表单校验失败 提示message错误
-     */
-    const reg = /^\w+$/;
-    if (!value) {
-      // 输入值为空
-      callback(`${name}不能为空`);
-    } else if (value.length < 4) {
-      callback(`${name}必须大于4位`);
-    } else if (value.length > 15) {
-      callback(`${name}必须小于15位`);
-    } else if (!reg.test(value)) {
-      callback(`${name}只能包含英文、数字、下划线`);
-    }
-
-    // 必须要调用haiyou
-    callback();
-  };
+  
 
   login = e => {
     e.preventDefault();
@@ -128,7 +102,7 @@ class Login extends Component {
                   /* // 这种方法不好 因为他不满足多个条件会同时报多个错误
                   {
                     required: true,
-                    message: "Please input your username!"
+                    message: "用户名不能为空!"
                   },
                   {
                     min: 4,
@@ -145,7 +119,11 @@ class Login extends Component {
                   //#endregion
                   // 使用自定义校验 callback必须被调用 这种方法不会同时报多个错误并且可以复用代码
                   {
-                    validator: this.validator
+                    required: true,
+                    message: "用户名不能为空"
+                  },
+                  {
+                    validator
                   }
                 ]
               })(
@@ -162,7 +140,11 @@ class Login extends Component {
               {getFieldDecorator("password", {
                 rules: [
                   {
-                    validator: this.validator
+                    required: true,
+                    message: "用户名不能为空"
+                  },
+                  {
+                    validator
                   }
                 ]
               })(

@@ -225,3 +225,16 @@
 * props的数据传递 
 	* 更新role组件自己的role状态才能更新UpdateRoleFormrole组件 因为role组件通过props方式传递给UpdateRoleFormrole状态
 	* 异步action要返回response
+
+### 完成用户静态组件和数据动态展示
+* 仿照role组件写
+
+### 完成添加用户功能
+* 添加用户静态组件
+* 表单校验规则提取在utils可进行复用 login组件需要重新修改
+* 传递role数据 select组件获取role.name
+* 发送添加用户请求
+	* 定义api请求方式 
+	* 将数据添加到state中进行展示
+	* 隐藏对话框
+	* 清空表单数据

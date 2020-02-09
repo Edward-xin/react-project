@@ -192,3 +192,12 @@ export const reqGetUser = () => {
     method: 'GET'
   });
 };
+
+// 请求创建用户数据
+export const reqAddUser = ({ username, password, phone, email, roleId }) => {
+  return axiosInstance({
+    url: '/user/add',
+    method: 'POST',
+    data: { username, password, phone, email, roleId }
+  });
+};

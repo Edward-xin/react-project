@@ -7,6 +7,7 @@ import Category from '../containers/category';
 import Product from '../containers/product'
 import ProductForm from '../containers/product/product-form'
 import Role from '../containers/role'
+import User from '../containers/user'
 
 const routes = [
   {
@@ -40,8 +41,12 @@ const routes = [
     component: Role,
     exact: true
   },
+  {
+    path: "/user",
+    component: User,
+    exact: true
+  },
 
-  
 ];
 
 export default routes;

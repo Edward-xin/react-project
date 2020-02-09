@@ -184,3 +184,11 @@ export const reqUpdateRole = ({ roleId, authName, menus }) => {
     }
   });
 };
+
+// 请求获取用户数据
+export const reqGetUser = () => {
+  return axiosInstance({
+    url: '/user/get',
+    method: 'GET'
+  });
+};

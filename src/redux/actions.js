@@ -10,7 +10,8 @@ import {
   reqUpdateCategory,
   reqDeleteCategory,
   reqRoleList,
-  reqAddRole
+  reqAddRole,
+  reqUpdateRole
 } from "../api";
 import { setItem } from "../utils/storage";
 import {
@@ -22,7 +23,8 @@ import {
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
   GET_ROLE_LIST,
-  ADD_ROLE
+  ADD_ROLE,
+  UPDATE_ROLE
 } from "./action-types";
 
 export const changeLanguage = lang => ({ type: CHANGE_LANGUAGE, data: lang });
@@ -121,7 +123,6 @@ export const getRoleListAsync = () => {
   };
 };
 
-// reqAddRole
 
 const addRole = role => ({ type:ADD_ROLE, data: role });
 // 异步action
@@ -130,6 +131,22 @@ export const addRoleAsync = (name) => {
     // 发送请求
     return reqAddRole(name).then(response => {
       dispatch(addRole(response));
+    });
+  };
+};
+
+
+
+const updateRole = role => ({ type:UPDATE_ROLE, data: role });
+// 异步action
+export const updateRoleAsync = (name) => {
+  return dispatch => {
+    // 发送请求
+    return reqUpdateRole(name).then(response => {
+       dispatch(updateRole(response));
+       // 将请求更新后的role返回出去
+       return response;
+
     });
   };
 };

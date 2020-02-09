@@ -72,8 +72,8 @@ export const reqGetProductList = (pageNum, pageSize) => {
 // 请求获取单个商品数据
 export const reqGetProduct = productId => {
   return axiosInstance({
-    method: 'GET',
-    url: '/product/get',
+    method: "GET",
+    url: "/product/get",
     params: {
       productId
     }
@@ -96,7 +96,14 @@ export const reqAddProduct = ({ name, desc, categoryId, price, datail }) => {
 };
 
 // 请求修改商品数据
-export const reqUpdateProduct = ({ name, desc, categoryId, price, datail,productId}) => {
+export const reqUpdateProduct = ({
+  name,
+  desc,
+  categoryId,
+  price,
+  datail,
+  productId
+}) => {
   return axiosInstance({
     url: "/product/update",
     method: "POST",
@@ -117,12 +124,17 @@ export const reqUpdateProduct = ({ name, desc, categoryId, price, datail,product
   searchValue 搜索的值
   对象对于同一属性会覆盖
 */
-export const reqSearchProduct = ({ searchType, searchValue, pageNum, pageSize }) => {
+export const reqSearchProduct = ({
+  searchType,
+  searchValue,
+  pageNum,
+  pageSize
+}) => {
   return axiosInstance({
-    url: '/product/search',
-    method: 'GET',
+    url: "/product/search",
+    method: "GET",
     params: {
-      pageNum, 
+      pageNum,
       pageSize,
       [searchType]: searchValue
     }
@@ -132,8 +144,8 @@ export const reqSearchProduct = ({ searchType, searchValue, pageNum, pageSize })
 // 请求更新商品状态数据
 export const reqUpdateProductStatus = (productId, status) => {
   return axiosInstance({
-    url: '/product/update/status',
-    method: 'POST',
+    url: "/product/update/status",
+    method: "POST",
     data: {
       productId,
       status
@@ -144,19 +156,31 @@ export const reqUpdateProductStatus = (productId, status) => {
 // 请求获取角色列表数据
 export const reqRoleList = () => {
   return axiosInstance({
-    url: '/role/get',
-    method: 'GET',
+    url: "/role/get",
+    method: "GET"
   });
 };
 
 // 请求添加角色数据
-export const reqAddRole = (name) => {
+export const reqAddRole = name => {
   return axiosInstance({
-    url: '/role/add',
-    method: 'POST',
-    data:{
+    url: "/role/add",
+    method: "POST",
+    data: {
       name
     }
   });
 };
 
+// 请求设置角色权限数据
+export const reqUpdateRole = ({ roleId, authName, menus }) => {
+  return axiosInstance({
+    url: "/role/update",
+    method: "POST",
+    data: {
+      roleId,
+      authName,
+      menus
+    }
+  });
+};

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import { Icon, Drawer, Divider, Button } from 'antd';
 import { SketchPicker } from 'react-color';
 
@@ -106,7 +106,7 @@ export default class ThemePicker extends Component {
     const { visible, currentColor } = this.state;
 
     return (
-      <div>
+      <Fragment>
         <div className='theme-picker-btn' onClick={this.onOpen}>
           <Icon type='setting' />
         </div>
@@ -128,7 +128,7 @@ export default class ThemePicker extends Component {
             确认
           </Button>
         </Drawer>
-      </div>
+      </Fragment>
     );
   }
 }

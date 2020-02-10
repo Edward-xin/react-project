@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,Fragment } from "react";
 import { Card, Button, Radio, Table, message, Modal } from "antd";
 import dayjs from "dayjs";
 import { connect } from "react-redux";
@@ -193,7 +193,8 @@ class Role extends Component {
     return (
       <Card
         title={
-          <div>
+          // Fragment专门用来充当根标签，特点：不会生成多余的DOM节点
+          <Fragment>
             <Button
               type="primary"
               onClick={this.switchModal("isShowAddRoleModal", true)}
@@ -208,7 +209,7 @@ class Role extends Component {
             >
               设置角色权限
             </Button>
-          </div>
+          </Fragment>
         }
       >
         {/* Group包住Table Table里有Radio  Radio就能变成单选 Group行内元素 是被Table撑开的*/}

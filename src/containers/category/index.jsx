@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component ,Fragment} from "react";
 import { Card, Button, Icon, Table, Modal, message } from "antd";
 import { connect } from "react-redux";
 
@@ -45,14 +45,14 @@ class Category extends Component {
             如果 dataIndex 没有，得到就是整个数据
         */
         return (
-          <div>
+          <Fragment>
             <Button type="link" onClick={this.showCategoryModal(category)}>
               修改分类
             </Button>
             <Button type="link" onClick={this.delCategory(category)}>
               删除分类
             </Button>
-          </div>
+          </Fragment>
         );
       }
     }

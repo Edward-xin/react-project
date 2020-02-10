@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component ,Fragment} from "react";
 import { Card, Button, Table, message, Modal } from "antd";
 import dayjs from "dayjs";
 import { connect } from "react-redux";
@@ -46,10 +46,10 @@ class User extends Component {
       // dataIndex: 'roleId',
       render: () => {
         return (
-          <div>
+          <Fragment>
             <Button type="link">修改</Button>
             <Button type="link">删除</Button>
-          </div>
+          </Fragment>
         );
       }
     }

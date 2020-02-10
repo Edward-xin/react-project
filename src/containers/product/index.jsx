@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,Fragment } from "react";
 import { Card, Select, Input, Button, Icon, Table, message } from "antd";
 
 import { reqGetProductList, reqSearchProduct ,reqUpdateProductStatus} from "$api";
@@ -45,7 +45,7 @@ export default class Product extends Component {
         */
        if (status === 1) {
         return (
-          <div>
+          <Fragment>
             <Button
               type='primary'
               onClick={this.updateProductStatus(_id, status)}
@@ -53,11 +53,11 @@ export default class Product extends Component {
               上架
             </Button>
             <span>已下架</span>
-          </div>
+          </Fragment>
         );
       }
         return (
-          <div>
+          <Fragment>
             <Button
               type='primary'
               onClick={this.updateProductStatus(_id, status)}
@@ -65,7 +65,7 @@ export default class Product extends Component {
               下架
             </Button>
             <span>已上架</span>
-          </div>
+          </Fragment>
         );
       }
     },
@@ -78,12 +78,12 @@ export default class Product extends Component {
           如果没有 dataIndex，那么render方法中 product 就是整个商品数据
         */
         return (
-          <div>
+          <Fragment>
             <Button type="link">详情</Button>
             <Button type="link" onClick={this.showUpdateProduct(product)}>
               修改
             </Button>
-          </div>
+          </Fragment>
         );
       }
     }
@@ -256,7 +256,7 @@ export default class Product extends Component {
     return (
       <Card
         title={
-          <div>
+          <Fragment>
             <Select defaultValue={searchType} onChange={this.handleSelect}>
               <Select.Option value="productName">根据商品名称</Select.Option>
               <Select.Option value="productDesc">根据商品描述</Select.Option>
@@ -270,7 +270,7 @@ export default class Product extends Component {
             <Button type="primary" onClick={this.search}>
               搜索
             </Button>
-          </div>
+          </Fragment>
         }
         extra={
           <Button type="primary" onClick={this.showAddProduct}>

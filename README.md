@@ -275,5 +275,11 @@
 	* axios模块的公共请求前缀要改 
 	* 定义error-boundary组件
 	* 比如包裹住Route组件 (App组件)
-* 代码分割
-	* 
+	* 检查  先yarn build 再serve build 
+* 代码分割(按需加载)
+	* React.lazy + Suspense 较新特性，不支持服务端渲染
+		* 在路由表里引入lazy 对组件进行懒加载处理
+		* App组件引入 Suspense 包住所有路由
+		* Suspense 的fallback属性表示加载中 (引入antd的Spin组件(加载图组件))
+		* 检查  先yarn build 再serve build 
+	* react-loadable 支持服务端渲染(SSL还没学)

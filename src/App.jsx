@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component ,Suspense} from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 import { connect } from "react-redux";
-import { ConfigProvider } from "antd";
+import { ConfigProvider ,Spin} from "antd";
 
 import Login from "./containers/login";
 import BasicLyout from "./components/basic-layout";
@@ -75,6 +75,12 @@ class App extends Component {
           messages={isEn ? en : zhCN} // 选择语言包
         >
           <Router>
+            {/* 
+              lazy 必须配合 Suspense 一起使用。（Suspense必须包裹lazy）
+                fallback 属性，组件会采用懒加载，没有加载完成是显示 fallback的值
+                加载完成就会替换成对应的组件
+            */}
+            <Suspense fallback={<Spin size='large' />}>
             <Switch>
               <Route path="/login" exact component={Login} />
               {/* exact 全匹配 否则会命中两个地址 */}
@@ -82,13 +88,14 @@ class App extends Component {
                 {filterRoutes.map(route => {
                   // return <Route path={route.path} exact={route.exact} component={route.component} />
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundary key={route.path}>
                       <Route {...route} key={route.path} />
                     </ErrorBoundary>
                   );
                 })}
               </BasicLyout>
             </Switch>
+            </Suspense>
           </Router>
         </IntlProvider>
       </ConfigProvider>

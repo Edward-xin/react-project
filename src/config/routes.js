@@ -8,6 +8,8 @@ import Product from '../containers/product'
 import ProductForm from '../containers/product/product-form'
 import Role from '../containers/role'
 import User from '../containers/user'
+import Bar from '../components/charts/bar';
+import Map from '../components/charts/map';
 
 const routes = [
   {
@@ -44,6 +46,16 @@ const routes = [
   {
     path: "/user",
     component: User,
+    exact: true
+  },
+  {
+    path: "/charts/bar",
+    component: Bar,
+    exact: true
+  },
+  {
+    path: "/charts/line",
+    component: Map,
     exact: true
   },
 

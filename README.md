@@ -244,3 +244,22 @@
 * 路由权限过滤（防止直接键入地址就可访问）
 	* App组件内进行过滤
 
+### echars数据可视化（图形图表）
+* 使用puppeteer爬取数据
+* 在React中使用echarts	
+	* yarn add echarts-for-react echarts
+
+### 完成切换主题色功能
+* 静态组件
+* 引入抽屉组件Drawer
+* 绑定事件 定义状态 显示隐藏 
+* 引入拾色器 yarn add react-color
+* 引入分割线组件 Divider
+* 点击确认切换主题颜色(注意：不能修改webpack配置，如果要修改，必须重启。)
+	* 新建一个style标签(保证只创建一次在componentDidMount中)
+	* 将要修改的样式添加上去
+	* 添加到页面中生效（覆盖之前的样式）
+* 持久化存储 将颜色保存在localStorage中(刷新才可以获取到)
+* 注意还要在componentDidMount中初始化主题色
+* 点击取消要变回之前的主题色 引入状态prevColor
+

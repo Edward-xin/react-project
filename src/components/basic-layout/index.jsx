@@ -5,6 +5,7 @@ import withCheckLogin from "../../containers/with-check-login";
 
 import LeftNav from "./left-nav";
 import HeaderMain from "./header-main";
+import ThemePicker from './theme-picker'
 
 import logo from "../../assets/imgs/logo.png";
 import "./index.less";
@@ -53,6 +54,7 @@ class BasicLyout extends Component {
             Ant Design ©2018 Created by Ant UED
           </Footer>
         </Layout>
+        <ThemePicker />
       </Layout>
     );
   }

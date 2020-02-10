@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Button, Form, Input, Icon, message } from "antd";
 import { connect } from "react-redux";
 
-import { savaUserAsync } from "../../redux/actions";
+import { savaUserAsync } from '$cont/user/store';
 import withCheckLogin from '../with-check-login'
 import { validator } from '$utils/tools';
 

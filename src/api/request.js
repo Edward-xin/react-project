@@ -8,7 +8,7 @@ import {message} from 'antd'
 import errCode from "../config/error-code";
 import store from "$redux/store";
 import {removeItem} from '$utils/storage'
-import {removeUser} from '$redux/actions'
+import {removeUser} from '$cont/user/store'
 
 // 创建axios实例 配置axios拦截器
 const axiosInstance = axios.create({

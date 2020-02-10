@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Layout} from "antd";
+import { Layout } from "antd";
 import { FormattedMessage } from "react-intl";
 import withCheckLogin from "../../containers/with-check-login";
 
 import LeftNav from "./left-nav";
 import HeaderMain from "./header-main";
-import ThemePicker from './theme-picker'
+import ThemePicker from "./theme-picker";
 
 import logo from "../../assets/imgs/logo.png";
 import "./index.less";

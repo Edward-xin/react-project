@@ -7,7 +7,7 @@ import {
   addCategoryAsync,
   updateCategoryAsync,
   deleteCategoryAsync
-} from "$redux/actions";
+} from './store';
 import AddCategoryForm from "./add-category-form";
 
 @connect(state => ({ categories: state.categories }), {

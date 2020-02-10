@@ -3,7 +3,7 @@ import { Card, Button, Radio, Table, message, Modal } from "antd";
 import dayjs from "dayjs";
 import { connect } from "react-redux";
 
-import { getRoleListAsync, addRoleAsync ,updateRoleAsync} from "$redux/actions";
+import { getRoleListAsync, addRoleAsync ,updateRoleAsync} from './store';
 import AddRoleForm from "./add-role-form";
 import UpdateRoleForm from "./update-role-form";
 

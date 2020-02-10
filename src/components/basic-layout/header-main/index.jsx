@@ -3,13 +3,14 @@ import { Button, Icon, Modal } from "antd";
 import screenfull from "screenfull";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import {injectIntl,FormattedMessage} from 'react-intl';
-import dayjs from 'dayjs'
+import { injectIntl, FormattedMessage } from "react-intl";
+import dayjs from "dayjs";
 
 import { removeItem } from "$utils/storage";
-import { removeUser, changeLanguage } from "$redux/actions";
+import { removeUser } from "$cont/user/store";
+import { changeLanguage } from "./store";
 
-import menus from '$conf/menus'
+import menus from "$conf/menus";
 import "./index.less";
 
 // 获得intl属性
@@ -28,17 +29,17 @@ import "./index.less";
 class HeaderMain extends Component {
   state = {
     isScreenfull: false, // 全屏标记 一开始不是全屏
-    date:Date.now()
+    date: Date.now()
   };
   componentDidMount() {
     // 只需要绑定一次 所以在componentDidMount生命周期函数
     // 检测全屏变化
     screenfull.on("change", this.handleScreenFullChange);
     // 定时器 用来更新时间
-    this.timeId= setInterval(() => {
+    this.timeId = setInterval(() => {
       this.setState({
-        date:Date.now()
-      })
+        date: Date.now()
+      });
     }, 1000);
   }
   componentWillUnmount() {
@@ -61,10 +62,10 @@ class HeaderMain extends Component {
   };
   // 退出功能(对话框)
   logout = () => {
-    const { intl }=this.props;
+    const { intl } = this.props;
     Modal.confirm({
       // 对话框不在root里 要国际化需以下操作
-      title: intl.formatMessage({id:'logout'}),
+      title: intl.formatMessage({ id: "logout" }),
       // content: "",
       onOk: () => {
         // 清空数据 localStorage 和redux都要清
@@ -85,37 +86,38 @@ class HeaderMain extends Component {
     this.props.changeLanguage(language);
   };
 
-  findTitle=(menus,pathname)=>{
+  findTitle = (menus, pathname) => {
     for (let index = 0; index < menus.length; index++) {
       const menu = menus[index];
       // 二级菜单
-      if(menu.children){
+      if (menu.children) {
         for (let index = 0; index < menu.children.length; index++) {
           const cMenu = menu.children[index];
           // 如果pathname是 /product 返回 product
           // 如果pathname是 /product/add 返回 product
           // cMenu.path是 /product  包含关系 同pathname.includes(cMenu.path)
-          if(pathname.indexOf(cMenu.path) !== -1){
-            return cMenu.title
+          if (pathname.indexOf(cMenu.path) !== -1) {
+            return cMenu.title;
           }
-          
         }
-      }else{
+      } else {
         // 一级菜单
-        if(menu.path=== pathname){
-          return menu.title
+        if (menu.path === pathname) {
+          return menu.title;
         }
-
       }
-      
     }
-  }
+  };
 
   render() {
-    const { isScreenfull,date} = this.state;
-    const { username,language,location:{pathname}} = this.props;
+    const { isScreenfull, date } = this.state;
+    const {
+      username,
+      language,
+      location: { pathname }
+    } = this.props;
 
-    const title = this.findTitle(menus,pathname);
+    const title = this.findTitle(menus, pathname);
 
     return (
       <div className="header-main">
@@ -128,7 +130,7 @@ class HeaderMain extends Component {
             size="small"
             onClick={this.changeLange}
           >
-            {language === 'en' ? '中文' : 'English'}
+            {language === "en" ? "中文" : "English"}
           </Button>
           <span>hello,{username}~~ </span>
           <Button size="small" onClick={this.logout}>
@@ -138,9 +140,9 @@ class HeaderMain extends Component {
         <div className="header-main-bottom">
           <span className="header-main-left">
             <FormattedMessage id={title} />
-            </span>
+          </span>
           <span className="header-main-right">
-            {dayjs(date).format('YYYY/MM/DD HH:mm:ss')}
+            {dayjs(date).format("YYYY/MM/DD HH:mm:ss")}
           </span>
         </div>
       </div>

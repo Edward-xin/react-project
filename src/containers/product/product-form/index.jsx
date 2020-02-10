@@ -13,7 +13,7 @@ import {
 import BraftEditor from "braft-editor";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getCategoryListAsync } from "$redux/actions";
+import { getCategoryListAsync } from '$cont/category/store';
 import { reqAddProduct, reqUpdateProduct, reqGetProduct } from "$api";
 
 import "./index.less";

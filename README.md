@@ -283,3 +283,10 @@
 		* Suspense 的fallback属性表示加载中 (引入antd的Spin组件(加载图组件))
 		* 检查  先yarn build 再serve build 
 	* react-loadable 支持服务端渲染(SSL还没学)
+* 性能优化
+	* shouldComponentUpdate生命周期函数
+	* PureComponent类class
+		* 所有使用Component都替换成PureComponent纯组件 
+		* 缺点：每次都会对比state和props，并且如果是数据是对象类型，只进行浅比较（只对比对象的第一层属性）
+	* React.memo() 高阶组件 纯函数组件
+	* 都有的优点：减少组件的无效渲染。从而让组件性能更好

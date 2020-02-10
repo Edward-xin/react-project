@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,PureComponent } from "react";
 import { Layout } from "antd";
 import { FormattedMessage } from "react-intl";
 import withCheckLogin from "../../containers/with-check-login";
@@ -13,7 +13,7 @@ import "./index.less";
 const { Header, Content, Footer, Sider } = Layout;
 
 @withCheckLogin
-class BasicLyout extends Component {
+class BasicLyout extends PureComponent {
   state = {
     collapsed: false,
     isDisplay: true

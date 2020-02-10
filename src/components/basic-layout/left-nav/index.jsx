@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,PureComponent } from "react";
 import { Menu, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
@@ -12,7 +12,7 @@ const { SubMenu, Item } = Menu;
 @connect(state => ({ roleMenus: state.user.user.menus }))
 // withRouter高阶组件 提供路由组件的三大属性
 @withRouter
-class LeftNav extends Component {
+class LeftNav extends PureComponent {
   // 遍历菜单项文件创建菜单
   createMenus = menus => {
     return menus.map(menu => {
